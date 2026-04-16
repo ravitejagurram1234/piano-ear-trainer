@@ -1,0 +1,30 @@
+<div class="overlay" @overlayAnim role="dialog" aria-modal="true" aria-label="Correct answer celebration">
+
+  <!-- Confetti particles -->
+  <div class="confetti-container" aria-hidden="true">
+    @for (p of particles; track p.id) {
+      <div class="confetti-particle" [ngStyle]="particleStyle(p)"></div>
+    }
+  </div>
+
+  <!-- Celebration card -->
+  <div class="success-card" @cardAnim>
+    <div class="success-card__icon" @iconAnim aria-hidden="true">✓</div>
+
+    <h2 class="success-card__title">Correct!</h2>
+
+    @if (noteName) {
+      <p class="success-card__note">
+        <span class="success-card__note-label">You identified</span>
+        <span class="success-card__note-name">{{ noteName }}</span>
+      </p>
+    }
+
+    <div class="success-card__rings" aria-hidden="true">
+      <div class="ring ring--1"></div>
+      <div class="ring ring--2"></div>
+      <div class="ring ring--3"></div>
+    </div>
+  </div>
+
+</div>

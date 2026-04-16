@@ -1,0 +1,116 @@
+<section class="controls-panel" aria-label="Training settings">
+  <h2 class="controls-panel__title">Settings</h2>
+
+  <div class="controls-grid">
+
+    <!-- ── Octave Range ────────────────────────────────────────────────── -->
+    <div class="control-group control-group--range">
+      <label class="control-label">
+        Octave Range
+        <span class="control-label__badge">{{ range.min }} – {{ range.max }}</span>
+        <span class="control-label__sub">{{ noteCount() }} notes available</span>
+      </label>
+
+      <!-- Visual octave bar -->
+      <div class="octave-bar" aria-hidden="true">
+        @for (oct of octaveArray; track oct) {
+          <div
+            class="octave-bar__cell"
+            [class.octave-bar__cell--active]="isInRange(oct)"
+          >{{ oct }}</div>
+        }
+      </div>
+
+      <!-- Dual sliders -->
+      <div class="dual-slider">
+        <div class="dual-slider__track">
+          <div
+            class="dual-slider__fill"
+            [style.left.%]="fillLeft"
+            [style.width.%]="fillWidth"
+          ></div>
+        </div>
+
+        <div class="dual-slider__inputs">
+          <div class="slider-field">
+            <label class="slider-field__label" for="minOctave">Min octave</label>
+            <input
+              id="minOctave"
+              type="range"
+              class="slider"
+              [min]="minOctave"
+              [max]="maxOctave"
+              [value]="range.min"
+              (input)="onMinChange(+$any($event.target).value)"
+              aria-label="Minimum octave"
+            />
+            <span class="slider-field__val">{{ range.min }}</span>
+          </div>
+
+          <div class="slider-field">
+            <label class="slider-field__label" for="maxOctave">Max octave</label>
+            <input
+              id="maxOctave"
+              type="range"
+              class="slider"
+              [min]="minOctave"
+              [max]="maxOctave"
+              [value]="range.max"
+              (input)="onMaxChange(+$any($event.target).value)"
+              aria-label="Maximum octave"
+            />
+            <span class="slider-field__val">{{ range.max }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Black Keys Toggle ──────────────────────────────────────────── -->
+    <div class="control-group control-group--toggle">
+      <label class="control-label">
+        Black Keys
+        <span class="control-label__sub">Include sharps &amp; flats (♯♭)</span>
+      </label>
+
+      <button
+        class="toggle-switch"
+        [class.toggle-switch--on]="includeBlackKeys"
+        role="switch"
+        [attr.aria-checked]="includeBlackKeys"
+        aria-label="Include black keys"
+        (click)="onBlackKeyToggle()"
+      >
+        <span class="toggle-switch__thumb"></span>
+        <span class="toggle-switch__label">
+          {{ includeBlackKeys ? 'On' : 'Off' }}
+        </span>
+      </button>
+
+      <div class="key-preview" aria-hidden="true">
+        <span class="key-preview__white">C</span>
+        @if (includeBlackKeys) {
+          <span class="key-preview__black">C♯</span>
+        }
+        <span class="key-preview__white">D</span>
+        @if (includeBlackKeys) {
+          <span class="key-preview__black">D♯</span>
+        }
+        <span class="key-preview__white">E</span>
+        <span class="key-preview__white">F</span>
+        @if (includeBlackKeys) {
+          <span class="key-preview__black">F♯</span>
+        }
+        <span class="key-preview__white">G</span>
+        @if (includeBlackKeys) {
+          <span class="key-preview__black">G♯</span>
+        }
+        <span class="key-preview__white">A</span>
+        @if (includeBlackKeys) {
+          <span class="key-preview__black">A♯</span>
+        }
+        <span class="key-preview__white">B</span>
+      </div>
+    </div>
+
+  </div>
+</section>

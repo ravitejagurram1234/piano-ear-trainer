@@ -1,0 +1,50 @@
+<div class="keyboard-scroll-wrapper" role="group" aria-label="Piano keyboard">
+  <div class="keyboard">
+    @for (octave of octaves; track octave) {
+      <div class="octave">
+        <!-- Octave label -->
+        <div class="octave__label" [attr.aria-label]="'Octave ' + octave">
+          <span class="octave__num">{{ octave }}</span>
+        </div>
+
+        <!-- Keys container -->
+        <div class="octave__keys">
+          <!-- White keys -->
+          @for (vm of getWhiteKeys(octave); track vm.note.displayName) {
+            <button
+              class="key key--white"
+              [class.key--active]="vm.isActive"
+              [class.key--correct]="vm.isCorrect"
+              [class.key--wrong]="vm.isWrong"
+              [class.key--guessable]="vm.canClick"
+              [attr.aria-label]="vm.note.displayName + (vm.canClick ? ', click to guess' : '')"
+              [attr.aria-pressed]="vm.isActive || vm.isCorrect"
+              [disabled]="!vm.canClick"
+              (click)="onKeyClick(vm, $event)"
+            >
+              <span class="key__label key__label--white">{{ vm.note.name }}{{ vm.note.octave }}</span>
+            </button>
+          }
+
+          <!-- Black keys (absolutely positioned over white keys) -->
+          @for (vm of getBlackKeys(octave); track vm.note.displayName) {
+            <button
+              class="key key--black"
+              [class.key--active]="vm.isActive"
+              [class.key--correct]="vm.isCorrect"
+              [class.key--wrong]="vm.isWrong"
+              [class.key--guessable]="vm.canClick"
+              [style.left]="blackKeyLeft(vm.note.name)"
+              [attr.aria-label]="vm.note.displayName + (vm.canClick ? ', click to guess' : '')"
+              [attr.aria-pressed]="vm.isActive || vm.isCorrect"
+              [disabled]="!vm.canClick"
+              (click)="onKeyClick(vm, $event)"
+            >
+              <span class="key__label key__label--black">{{ vm.note.name }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,226 @@
+// ── Piano Keyboard Component ──────────────────────────────────────────────────
+
+:host {
+  display: block;
+}
+
+// Local design tokens
+:host {
+  --white-key-width:  48px;
+  --white-key-height: 164px;
+  --black-key-width:  30px;
+  --black-key-height: 98px;
+  --octave-width:     calc(7 * var(--white-key-width));
+}
+
+// ── Scroll wrapper ───────────────────────────────────────────────────────────
+
+.keyboard-scroll-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 20px 4px 24px;
+  cursor: default;
+
+  // Smooth momentum scroll on iOS
+  -webkit-overflow-scrolling: touch;
+}
+
+// ── Keyboard row ─────────────────────────────────────────────────────────────
+
+.keyboard {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+// ── Octave block ──────────────────────────────────────────────────────────────
+
+.octave {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &:not(:last-child) .octave__keys {
+    border-right: 2px solid rgba(255, 255, 255, 0.08);
+  }
+
+  &__label {
+    margin-bottom: 10px;
+    min-width: var(--octave-width);
+    text-align: center;
+  }
+
+  &__num {
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-muted, #606080);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  &__keys {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: var(--octave-width);
+  }
+}
+
+// ── Key base ─────────────────────────────────────────────────────────────────
+
+.key {
+  appearance: none;
+  border: none;
+  cursor: default;
+  font-family: var(--font-sans, sans-serif);
+  user-select: none;
+  outline: none;
+  transition:
+    background-color 120ms ease,
+    box-shadow 120ms ease,
+    transform 80ms ease;
+
+  &__label {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    white-space: nowrap;
+    font-weight: 500;
+
+    &--white {
+      font-size: 9.5px;
+      color: #888;
+    }
+
+    &--black {
+      font-size: 8.5px;
+      color: #666;
+      bottom: 7px;
+    }
+  }
+
+  &--guessable {
+    cursor: pointer;
+  }
+}
+
+// ── White keys ────────────────────────────────────────────────────────────────
+
+.key--white {
+  position: relative;
+  width: var(--white-key-width);
+  height: var(--white-key-height);
+  background: #f5f5f0;
+  border: 1px solid #d0d0c8;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  z-index: 1;
+  flex-shrink: 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.35), inset 0 -3px 4px rgba(0,0,0,0.08);
+
+  &.key--guessable:hover {
+    background: #ebebdf;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.35), inset 0 -3px 4px rgba(0,0,0,0.08),
+                0 0 0 2px rgba(99, 102, 241, 0.4);
+    transform: scaleY(1.01);
+    transform-origin: top center;
+
+    .key__label--white { color: var(--color-accent, #6366f1); }
+  }
+
+  &.key--guessable:active {
+    background: #ddddd0;
+    transform: scaleY(0.99);
+    transform-origin: top center;
+  }
+
+  // State: note is currently revealed/highlighted (neutral)
+  &.key--active {
+    background: #fbbf24 !important;
+    box-shadow: 0 0 18px rgba(251, 191, 36, 0.55), inset 0 -3px 4px rgba(0,0,0,0.1) !important;
+    .key__label--white { color: #7c4700; }
+  }
+
+  // State: correct guess (key = current note)
+  &.key--correct {
+    background: #10b981 !important;
+    box-shadow: 0 0 22px rgba(16, 185, 129, 0.6), inset 0 -3px 4px rgba(0,0,0,0.1) !important;
+    .key__label--white { color: #065f46; }
+  }
+
+  // State: the user's wrong guess
+  &.key--wrong {
+    background: #ef4444 !important;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.5), inset 0 -3px 4px rgba(0,0,0,0.1) !important;
+    .key__label--white { color: #7f1d1d; }
+  }
+}
+
+// ── Black keys ────────────────────────────────────────────────────────────────
+
+.key--black {
+  position: absolute;
+  top: 0;
+  width: var(--black-key-width);
+  height: var(--black-key-height);
+  background: linear-gradient(to bottom, #1c1c24 0%, #111118 60%, #0a0a0f 100%);
+  border: 1px solid #050508;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  z-index: 2;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.7), inset 0 -2px 3px rgba(0,0,0,0.6);
+
+  &.key--guessable:hover {
+    background: linear-gradient(to bottom, #2a2a38 0%, #1e1e2c 60%, #141420 100%);
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.7), inset 0 -2px 3px rgba(0,0,0,0.6),
+                0 0 0 2px rgba(99, 102, 241, 0.5);
+
+    .key__label--black { color: var(--color-accent, #6366f1); }
+  }
+
+  &.key--guessable:active {
+    background: linear-gradient(to bottom, #111118 0%, #0a0a0f 100%);
+    transform: translateY(1px);
+  }
+
+  // State: revealed/neutral
+  &.key--active {
+    background: linear-gradient(to bottom, #d97706 0%, #b45309 100%) !important;
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.7), 0 0 14px rgba(251,191,36,0.5) !important;
+    .key__label--black { color: #fef3c7; }
+  }
+
+  // State: correct guess
+  &.key--correct {
+    background: linear-gradient(to bottom, #059669 0%, #047857 100%) !important;
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.7), 0 0 16px rgba(16,185,129,0.55) !important;
+    .key__label--black { color: #d1fae5; }
+  }
+
+  // State: wrong guess
+  &.key--wrong {
+    background: linear-gradient(to bottom, #dc2626 0%, #b91c1c 100%) !important;
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.7), 0 0 12px rgba(239,68,68,0.5) !important;
+    .key__label--black { color: #fee2e2; }
+  }
+}
+
+// ── Responsive: scale down on small screens ───────────────────────────────────
+
+@media (max-width: 600px) {
+  :host {
+    --white-key-width:  36px;
+    --white-key-height: 130px;
+    --black-key-width:  22px;
+    --black-key-height: 78px;
+  }
+
+  .key__label--white { font-size: 8px; }
+  .key__label--black { font-size: 7.5px; }
+}
