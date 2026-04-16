@@ -107,7 +107,7 @@
           class="btn btn--primary"
           [disabled]="isPlaying()"
           (click)="playNote()"
-          aria-label="{{ currentNote() ? 'Play next note' : 'Play a note' }}"
+          [attr.aria-label]="currentNote() ? 'Play next note' : 'Play a note'"
         >
           @if (isPlaying()) {
             <span class="btn__spinner" aria-hidden="true"></span>
